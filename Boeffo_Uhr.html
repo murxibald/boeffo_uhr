@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B&ouml;ffo Uhr</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #c1e1ec 100%);
+        }
+        .container {
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .date {
+            font-size: 1.5rem;
+            color: #3a3a3a;
+            margin-bottom: 0.5rem;
+        }
+        .time {
+            font-size: 2.5rem;
+            color: #0077b6;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem 0.5rem;
+                border-radius: 1rem;
+            }
+            .date {
+                font-size: 1.1rem;
+            }
+            .time {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="date" id="date"></div>
+        <div class="time" id="time"></div>
+    </div>
+    <script>
+        const toeffoDict = ["Tittwoch", "Tonnerstag", "Treitag", "Tamstag", "Tonntag"];
+        const moeffoDict = ["Zero", "Yi", "Dva", "Teen", "Cuatro"];
+        function updateTimeAndDate() {
+            const now = new Date();
+            const year = now.getFullYear() - 2019;
+            const j1 = new Date(year, 1, 1);
+            const mn = new Date(year, now.getMonth(), now.getDate());
+            const daysSinceJ1 = Math.floor((mn - j1) / 86400000);
+            if (daysSinceJ1 < 365) {
+                const moeffo = moeffoDict[Math.floor(daysSinceJ1 / 73)];
+                const tag = ('0' + ((daysSinceJ1 % 73) + 1)).slice(-2);
+                const toeffo = toeffoDict[daysSinceJ1 % 5];
+                document.getElementById('date').textContent = `${toeffo}, der ${tag}. ${moeffo} ${('0' + year).slice(-2)} n. Co.`;
+            } else {
+                document.getElementById('date').textContent = `Tag des Rotkehlchen ${('0' + year).slice(-2)} n. Co.`;
+            }
+            const minutesSinceMn = Math.floor((now - mn) / 60000)
+            const boeffo = ('0' + Math.floor(minutesSinceMn / 72)).slice(-2);
+            const minute = ('0' + minutesSinceMn % 72).slice(-2);
+            const second = ('0' + now.getSeconds()).slice(-2);
+            const timeStr = `${boeffo}:${minute}:${second}`;
+            document.getElementById('time').textContent = timeStr;
+        }
+        updateTimeAndDate();
+        setInterval(updateTimeAndDate, 1000);
+    </script>
+</body>
+</html>
